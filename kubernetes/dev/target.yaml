@@ -15,13 +15,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: javasample
-  namespace: default
+  name: web
 spec:
   template:
     spec:
       containers:
-        - name: javasample
+        - name: web
           env:
             - name: TARGET
               value: dev

@@ -1,28 +1,29 @@
 steps:
-- name: gcr.io/cloud-builders/mvn
-  args: ['package','-Dmaven.test.skip=true']
-  id: package
-- name: gcr.io/cloud-builders/docker
-  args: ['build','-t','europe-docker.pkg.dev/$PROJECT_ID/cloudbuilds/javasample:$SHORT_SHA','--build-arg=JAR_FILE=target/sample-0.0.1-SNAPSHOT.jar','.']
-  id: build
-  waitFor: ['package']
-- name: gcr.io/cloud-builders/docker
-  args: ['push','europe-docker.pkg.dev/$PROJECT_ID/cloudbuilds/javasample:$SHORT_SHA']
-  id: push
-  waitFor: ['package','build']
-- name: "gcr.io/cloud-builders/gke-deploy"
-  id: prepare
+- name: gcr.io/k8s-skaffold/skaffold
   args:
-  - prepare
-  - --filename=kubernetes/javasample.yaml
-  - --image=europe-docker.pkg.dev/$PROJECT_ID/cloudbuilds/javasample:$SHORT_SHA
-- name: 'gcr.io/cloud-builders/gcloud'
-  entrypoint: /bin/sh
+    - skaffold
+    - build
+    - '--interactive=false'
+    - '--file-output=/workspace/artifacts.json'
+    - '--default-repo=europe-docker.pkg.dev/$PROJECT_ID/cloudbuilds'
+    - '--push=true'
+  id: skaffold-build
+- name: gcr.io/google.com/cloudsdktool/cloud-sdk
+  entrypoint: gcloud
   args:
-  - '-c'
-  - |
-    set -x && \
-    export KUBECONFIG="$(pwd)/gateway-kubeconfig" && \
-    gcloud beta container hub memberships get-credentials $_CLUSTER && \
-    kubectl --kubeconfig gateway-kubeconfig apply -f output/expanded
-id: deploy-to-eks
+    [
+      "deploy", "releases", "create", "rel-${SHORT_SHA}",
+      "--delivery-pipeline", "multi-cloud-pipeline",
+      "--region", "europe-west1",
+      "--annotations", "commitId=${REVISION_ID}",
+      "--build-artifacts", "/workspace/artifacts.json"
+    ]
+  waitFor: ['skaffold-build']
+artifacts:
+objects:
+  location: 'gs://multi-cloud-sw-delivery-artifacts/'
+  paths:
+  - '/workspace/artifacts.json'
+options:
+machineType: E2_HIGHCPU_8
+timeout: 3600s
