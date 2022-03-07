@@ -12,26 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: skaffold/v2beta26
-kind: Config
-build:
-  artifacts:
-    - image: leeroy-web
-      context: leeroy-web
-    - image: leeroy-app
-      context: leeroy-app
-deploy:
-  kubectl:
-    manifests:
-      - leeroy-web/kubernetes/*
-profiles:
-- name: staging
-  deploy:
-    kustomize:
-      paths:
-        - leeroy-app/kubernetes/qa
-- name: prod
-  deploy:
-    kustomize:
-      paths:
-        - leeroy-app/kubernetes/prod
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: leeroy-web
+  namespace: web-app-profiles
+  labels:
+    app: leeroy-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: leeroy-web
+  template:
+    metadata:
+      labels:
+        app: leeroy-web
+    spec:
+      containers:
+        - name: leeroy-web
+          image: leeroy-web
+          ports:
+            - containerPort: 8080
