@@ -24,8 +24,9 @@ deploy:
   kubectl:
     manifests:
       - leeroy-web/kubernetes/*
+      - leeroy-app/kubernetes/base/deployment.yaml
 profiles:
-- name: staging
+- name: qa
   deploy:
     kustomize:
       paths:
