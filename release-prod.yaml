@@ -1,0 +1,12 @@
+steps:
+- name: gcr.io/google.com/cloudsdktool/cloud-sdk
+  entrypoint: gcloud
+  args:
+    [
+      "deploy", "releases", "promote", "--delivery-pipeline",
+      "multi-cloud-pipeline", "--release", "rel-${SHORT_SHA}", 
+      "--region", "europe-west1"
+    ]
+options:
+machineType: E2_HIGHCPU_8
+timeout: 3600s
