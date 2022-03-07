@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: skaffold/v2beta7
+apiVersion: skaffold/v2beta27
 kind: Config
 build:
   artifacts:
-  - image: skaffold-buildpacks
+  - image: javasample
     buildpacks:
       builder: "gcr.io/buildpacks/builder:v1"
       trustBuilder: true
