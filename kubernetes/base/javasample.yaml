@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: javasample
+  namespace: default
+  labels:
+    app: javasample
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: javasample
+  template:
+    metadata:
+      labels:
+        app: javasample
+    spec:
+      containers:
+      - name: javasample
+        image: javasample
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: javasample
+  name: javasample
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+  selector:
+    app: javasample
+  sessionAffinity: None
+  type: LoadBalancer
+

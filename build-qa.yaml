@@ -2,9 +2,6 @@ steps:
 - name: gcr.io/cloud-builders/mvn
   args: ['package','-Dmaven.test.skip=true']
   id: package
-- name: gcr.io/cloud-builders/mvn
-  args: ['deploy']
-  id: deploy
 - name: gcr.io/cloud-builders/docker
   args: ['build','-t','europe-docker.pkg.dev/$PROJECT_ID/cloudbuilds/javasample:$SHORT_SHA','--build-arg=JAR_FILE=target/sample-0.0.1-SNAPSHOT.jar','.']
   id: build
@@ -13,17 +10,19 @@ steps:
   args: ['push','europe-docker.pkg.dev/$PROJECT_ID/cloudbuilds/javasample:$SHORT_SHA']
   id: push
   waitFor: ['package','build']
-- name: gcr.io/google.com/cloudsdktool/cloud-sdk
-  entrypoint: gcloud
+- name: "gcr.io/cloud-builders/gke-deploy"
+  id: prepare
   args:
-  - run
-  - deploy
-  - javasample
+  - prepare
+  - --filename=kubernetes/javasample.yaml
   - --image=europe-docker.pkg.dev/$PROJECT_ID/cloudbuilds/javasample:$SHORT_SHA
-  - --region=$_LOCATION
-  - --platform=managed
-  - --allow-unauthenticated
-  id: crun- deploy
-  waitFor: ['package','build','push']
-options:
-  substitutionOption: 'ALLOW_LOOSE'
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: /bin/sh
+  args:
+  - '-c'
+  - |
+    set -x && \
+    export KUBECONFIG="$(pwd)/gateway-kubeconfig" && \
+    gcloud beta container hub memberships get-credentials $_CLUSTER && \
+    kubectl --kubeconfig gateway-kubeconfig apply -f output/expanded
+id: deploy-to-eks
