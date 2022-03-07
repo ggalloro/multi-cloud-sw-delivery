@@ -1,0 +1,10 @@
+#New file to test only deployment of the same image on prod environment
+steps:
+- name: gcr.io/cloud-builders/gke-deploy
+  args:
+  - run
+  - --filename=kubernetes/javasample.yaml
+  - --image=europe-docker.pkg.dev/$PROJECT_ID/cloudbuilds/javasample:$SHORT_SHA
+  - --cluster=$_CLUSTER
+  - --location=$_LOCATION
+
