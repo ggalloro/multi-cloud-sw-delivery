@@ -16,7 +16,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: leeroy-app
-  namespace: web-app-profiles
 spec:
   replicas: 3
   template:
