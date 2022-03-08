@@ -31,8 +31,10 @@ profiles:
     kustomize:
       paths:
         - leeroy-app/kubernetes/qa
+        - leeroy-web/kubernetes/qa
 - name: prod
   deploy:
     kustomize:
       paths:
         - leeroy-app/kubernetes/prod
+        - leeroy-web/kubernetes/prod
