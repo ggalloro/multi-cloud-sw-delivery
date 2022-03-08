@@ -12,7 +12,7 @@ steps:
   entrypoint: gcloud
   args:
     [
-      "deploy", "releases", "create", "rel-${SHORT_SHA}",
+      "deploy", "releases", "create", "rel-leeroy-ms",
       "--delivery-pipeline", "multi-cloud-pipeline",
       "--region", "europe-west1",
       "--annotations", "commitId=${REVISION_ID}",
