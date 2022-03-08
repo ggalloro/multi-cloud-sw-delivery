@@ -20,8 +20,9 @@ metadata:
     app: leeroy-app
 spec:
   ports:
-    - port: 8081
-      name: leeroy-app
+  - name: http
+    port: 80
+    targetPort: 8081
   selector:
     app: leeroy-app
   type: LoadBalancer
