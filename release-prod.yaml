@@ -8,5 +8,5 @@ steps:
       "--region", "europe-west1"
     ]
 options:
-machineType: E2_HIGHCPU_8
+  machineType: E2_HIGHCPU_8
 timeout: 3600s
