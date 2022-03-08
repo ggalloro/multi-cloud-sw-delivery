@@ -4,7 +4,7 @@ steps:
   args:
     [
       "deploy", "releases", "promote", "--delivery-pipeline",
-      "multi-cloud-pipeline", "--release", "rel-${SHORT_SHA}", 
+      "multi-cloud-pipeline", "--release", "rel-leeroy-ms", 
       "--region", "europe-west1"
     ]
 options:
