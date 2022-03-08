@@ -19,12 +19,12 @@ metadata:
   labels:
     app: leeroy-app
 spec:
-  clusterIP: None
   ports:
-    - port: 50051
+    - port: 8081
       name: leeroy-app
   selector:
     app: leeroy-app
+  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -46,4 +46,4 @@ spec:
       - name: leeroy-app
         image: leeroy-app
         ports:
-        - containerPort: 50051
+        - containerPort: 8081
