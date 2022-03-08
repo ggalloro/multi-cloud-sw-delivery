@@ -16,14 +16,11 @@ apiVersion: skaffold/v2beta26
 kind: Config
 build:
   artifacts:
-    - image: leeroy-web
-      context: leeroy-web
     - image: leeroy-app
       context: leeroy-app
 deploy:
   kustomize:
     paths:
-      - leeroy-web/kubernetes/dev
       - leeroy-app/kubernetes/dev
 profiles:
 - name: qa
@@ -31,10 +28,8 @@ profiles:
     kustomize:
       paths:
         - leeroy-app/kubernetes/qa
-        - leeroy-web/kubernetes/qa
 - name: prod
   deploy:
     kustomize:
       paths:
         - leeroy-app/kubernetes/prod
-        - leeroy-web/kubernetes/prod
