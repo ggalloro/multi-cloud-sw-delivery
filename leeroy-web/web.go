@@ -22,7 +22,7 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	resp, err := http.Get("http://leeroy-app:50051")
+	resp, err := http.Get("http://leeroy-app:8081")
 	if err != nil {
 		panic(err)
 	}
